@@ -88,12 +88,14 @@ class ViewController: UIViewController {
         let numberOfViews = Int((self.button?.title(for: UIControlState(rawValue: 0)))!)!
         
         let constraints = AveragedView.averagedViewConstraints(sum: numberOfViews,
-                                                               tag: 999,
                                                                bottomObject: self.slider,
                                                                padding: 10.0,
+                                                               autoBackGroundColor: true,
                                                                isAddedGeneratedViews:
             { [weak self] views in
                 for view in views {
+                    view.tag = 999
+                    view.translatesAutoresizingMaskIntoConstraints = false
                     self?.view.addSubview(view)
                 }
                 return true
