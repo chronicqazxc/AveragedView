@@ -87,12 +87,20 @@ class ViewController: UIViewController {
         
         let numberOfViews = Int((self.button?.title(for: UIControlState(rawValue: 0)))!)!
         
-        let viewsAndConstraints = AveragedView.averagedViewsAndConstraints(sum: numberOfViews,
-                                                                           tag: 999,
-                                                                           bottomObject: self.slider,
-                                                                           padding: 10.0,
-                                                                           containerView: self.view)
-        self.view.addConstraints(viewsAndConstraints.constraints)
+        let constraints = AveragedView.averagedViewConstraints(sum: numberOfViews,
+                                                               tag: 999,
+                                                               bottomObject: self.slider,
+                                                               padding: 10.0,
+                                                               isAddedGeneratedViews:
+            { [weak self] views in
+                for view in views {
+                    self?.view.addSubview(view)
+                }
+                return true
+            }
+        )
+        
+        self.view.addConstraints(constraints)
         
         self.view.updateConstraintsIfNeeded()
         
