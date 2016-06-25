@@ -1,0 +1,16 @@
+PODS:
+  - AveragedView (0.1.0)
+
+DEPENDENCIES:
+  - AveragedView (from `../`)
+
+EXTERNAL SOURCES:
+  AveragedView:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AveragedView: f2804b64ee84b0235f8e23339be5f9cb05f0b4e0
+
+PODFILE CHECKSUM: b08bf6ac84dd08098638492976718fc6abd0cdfb
+
+COCOAPODS: 1.0.1

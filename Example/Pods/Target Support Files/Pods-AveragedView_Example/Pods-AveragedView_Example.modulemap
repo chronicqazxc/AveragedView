@@ -1,0 +1,6 @@
+framework module Pods_AveragedView_Example {
+  umbrella header "Pods-AveragedView_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

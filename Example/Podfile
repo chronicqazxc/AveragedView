@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AveragedView_Example' do
+  pod 'AveragedView', :path => '../'
+
+  target 'AveragedView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

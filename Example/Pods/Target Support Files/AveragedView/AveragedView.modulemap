@@ -1,0 +1,6 @@
+framework module AveragedView {
+  umbrella header "AveragedView-umbrella.h"
+
+  export *
+  module * { export * }
+}
