@@ -27,14 +27,14 @@ public class AveragedView: UIView {
                                             padding: padding)
     }
     
-    public static func averagedViewConstraints(sum: Int, tag: Int, bottomObject: AnyObject?, padding: Float, isAddedGeneratedViews: (views:Array<UIView>) -> Bool) -> Array<NSLayoutConstraint> {
+    public static func averagedViewConstraints(sum: Int, bottomObject: AnyObject?, padding: Float, autoBackGroundColor: Bool, isAddedGeneratedViews: (views:Array<UIView>) -> Bool) -> Array<NSLayoutConstraint> {
         
         let viewsArray = NSMutableArray()
         for _ in 0 ... sum-1 {
             let view = UIView(frame: CGRect.zero)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            view.backgroundColor = UIColor.randomColor()
-            view.tag = tag
+            if autoBackGroundColor {
+                view.backgroundColor = UIColor.randomColor()
+            }
             viewsArray.add(view)
         }
         
