@@ -38,7 +38,7 @@
 		14D3498D9F66AB52802BCC1D746E4815 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18EF9A86F3012BCCE64C22730A46EE33 /* Pods-AveragedView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-AveragedView_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		248C8A3078B4F89F86274A02E87C81BB /* Pods-AveragedView_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-AveragedView_Example-dummy.m"; sourceTree = "<group>"; };
-		335473BA7BFFC0E560048F546DDD5170 /* AveragedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AveragedView.swift; sourceTree = "<group>"; };
+		335473BA7BFFC0E560048F546DDD5170 /* AveragedView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AveragedView.swift; path = AveragedView/Classes/AveragedView.swift; sourceTree = "<group>"; };
 		33998FEDBCFC99BE86E53213FF1662AB /* Pods-AveragedView_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AveragedView_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		5D99FB69431FD9B16822DDF3BC01DC15 /* AveragedView.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AveragedView.xcconfig; sourceTree = "<group>"; };
 		5FBED786F5A27C5D43F95C81B0E53FCD /* Pods-AveragedView_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-AveragedView_Example-acknowledgements.plist"; sourceTree = "<group>"; };
@@ -54,7 +54,7 @@
 		9204CB7D20DB8639EAD5308CCBC61ED2 /* Pods_AveragedView_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AveragedView_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		92730900DB3C8A3D5B31537CEA011F97 /* Pods-AveragedView_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AveragedView_Example-resources.sh"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A4EA597959166810EDA4829F370A1348 /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		A4EA597959166810EDA4829F370A1348 /* Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = AveragedView/Classes/Extensions.swift; sourceTree = "<group>"; };
 		AFEA9729A184886227F8E6BD4734DD1D /* Pods-AveragedView_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-AveragedView_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		BC39A8AA88732AFF05B6E66E7FAF0F99 /* Pods-AveragedView_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-AveragedView_Example-frameworks.sh"; sourceTree = "<group>"; };
 		BCAFB608508D4453DC017AF184B8C5A0 /* AveragedView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AveragedView-umbrella.h"; sourceTree = "<group>"; };
@@ -105,10 +105,9 @@
 		50AB28B64A8AC0E9DE46253583C49CA2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				335473BA7BFFC0E560048F546DDD5170 /* AveragedView.swift */,
-				A4EA597959166810EDA4829F370A1348 /* Extensions.swift */,
 			);
-			path = Classes;
+			name = Classes;
+			path = AveragedView/Classes;
 			sourceTree = "<group>";
 		};
 		5932EF40BC86F71F5E5DE7CAB14DFD50 /* Targets Support Files */ = {
@@ -188,7 +187,9 @@
 		ED0B60309FB96DE58572957102FB5A23 /* AveragedView */ = {
 			isa = PBXGroup;
 			children = (
-				FBD47D8EA34B9A3D20B1EB7837E91A69 /* AveragedView */,
+				50AB28B64A8AC0E9DE46253583C49CA2 /* Classes */,
+				335473BA7BFFC0E560048F546DDD5170 /* AveragedView.swift */,
+				A4EA597959166810EDA4829F370A1348 /* Extensions.swift */,
 				F10705C7DAC1617E6BA9CFBC72608741 /* Support Files */,
 			);
 			name = AveragedView;
@@ -215,14 +216,6 @@
 			);
 			name = "Support Files";
 			path = "Example/Pods/Target Support Files/AveragedView";
-			sourceTree = "<group>";
-		};
-		FBD47D8EA34B9A3D20B1EB7837E91A69 /* AveragedView */ = {
-			isa = PBXGroup;
-			children = (
-				50AB28B64A8AC0E9DE46253583C49CA2 /* Classes */,
-			);
-			path = AveragedView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
