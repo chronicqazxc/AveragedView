@@ -145,6 +145,11 @@ public class AveragedView: UIView {
     }
     
     public static func ambiguityTest(view: UIView) {
-        print("<%@:0x%0x>: %@", view.classForCoder, unsafeAddress(of: view), view.hasAmbiguousLayout() ? "Ambiguous": "Unambiguous")
+        let format = NSString(format: "<%@:0x%0x>: %@", NSStringFromClass(self), unsafeAddress(of: view), view.hasAmbiguousLayout() ? "Ambiguous": "Unambiguous")
+        print(format)
+    }
+    
+    deinit {
+        print("AveragedView deinit")
     }
 }
