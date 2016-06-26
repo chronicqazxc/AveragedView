@@ -79,26 +79,31 @@ class ViewController: UIViewController {
     }
     
     func processViews(button: UIButton) {
-        for view in self.view.subviews {
-            if view.tag == 999 {
-                view.removeFromSuperview()
-            }
-        }
         
         let numberOfViews = Int((self.button?.title(for: UIControlState(rawValue: 0)))!)!
         
-        let constraints = AveragedView.averagedViewConstraints(sum: numberOfViews,
-                                                               bottomObject: self.slider,
+        let constraints = AveragedView.averagedViewConstraints(bottomObject: self.slider,
                                                                padding: 10.0,
                                                                autoBackGroundColor: true,
-                                                               isAddedGeneratedViews:
-            { [weak self] views in
-                for view in views {
-                    view.tag = 999
+                                                               type: AveragedViewType.Vertical,
+                                                               viewsForAverage:
+            { [weak self] _ in
+                let tag = 999
+                for view in (self?.view.subviews)! {
+                    if view.tag == tag {
+                        view.removeFromSuperview()
+                    }
+                }
+                
+                let views = NSMutableArray()
+                for _ in 1 ... numberOfViews {
+                    let view = UIView(frame: CGRect.zero)
+                    view.tag = tag
                     view.translatesAutoresizingMaskIntoConstraints = false
                     self?.view.addSubview(view)
+                    views.add(view)
                 }
-                return true
+                return views.copy() as! [UIView]
             }
         )
         

@@ -8,6 +8,10 @@
 
 import UIKit
 
+public enum AveragedViewType {
+    case Horizon, Vertical
+}
+
 public class AveragedView: UIView {
     func averageViews(sum: Int, tag: Int) -> Array<UIView> {
         let viewsArray = NSMutableArray()
@@ -27,7 +31,37 @@ public class AveragedView: UIView {
                                             padding: padding)
     }
     
-    public static func averagedViewConstraints(sum: Int, bottomObject: AnyObject?, padding: Float, autoBackGroundColor: Bool, isAddedGeneratedViews: (views:Array<UIView>) -> Bool) -> Array<NSLayoutConstraint> {
+    public static func averagedViewConstraints(bottomObject: AnyObject?,
+                                               padding: Float,
+                                               autoBackGroundColor: Bool,
+                                               type: AveragedViewType,
+                                               viewsForAverage: () -> Array<UIView>) -> Array<NSLayoutConstraint> {
+        let views = viewsForAverage()
+        if autoBackGroundColor {
+            for view in views {
+                view.backgroundColor = UIColor.randomColor()
+            }
+        }
+        
+        var constraints: Array<NSLayoutConstraint>
+        if type == .Vertical {
+            constraints = AveragedView.verticalViewConstraints(views: views,
+                                                               bottomObject: bottomObject,
+                                                               padding: padding)
+        } else {
+            constraints = AveragedView.viewConstraints(views: views,
+                                                       bottomObject: bottomObject,
+                                                       padding: padding)
+        }
+        return constraints
+    }
+    
+    public static func averagedViewConstraints(sum: Int,
+                                               bottomObject: AnyObject?,
+                                               padding: Float,
+                                               autoBackGroundColor: Bool,
+                                               type: AveragedViewType,
+                                               isAddedGeneratedViews: (views:Array<UIView>) -> Bool) -> Array<NSLayoutConstraint> {
         
         let viewsArray = NSMutableArray()
         for _ in 0 ... sum-1 {
@@ -41,17 +75,28 @@ public class AveragedView: UIView {
         let views = viewsArray.copy() as! Array<UIView>
         
         if isAddedGeneratedViews(views: views) {
-            let constraints = AveragedView.viewConstraints(views: views ,
+            
+            var constraints: Array<NSLayoutConstraint>
+            if type == .Vertical {
+                constraints = AveragedView.verticalViewConstraints(views: views,
+                                                                   bottomObject: bottomObject,
+                                                                   padding: padding)
+            } else {
+                constraints = AveragedView.viewConstraints(views: views,
                                                            bottomObject: bottomObject,
                                                            padding: padding)
+            }
             return constraints
         } else {
             return []
         }
-        
     }
     
-    public static func averagedViewsAndConstraints(sum: Int, tag: Int, bottomObject: AnyObject?, padding: Float, containerView: UIView ) -> (views:Array<UIView>, constraints:Array<NSLayoutConstraint>) {
+    public static func averagedViewsAndConstraints(sum: Int,
+                                                   tag: Int,
+                                                   bottomObject: AnyObject?,
+                                                   padding: Float,
+                                                   containerView: UIView ) -> (views:Array<UIView>, constraints:Array<NSLayoutConstraint>) {
 
         let viewsArray = NSMutableArray()
         for _ in 0 ... sum-1 {
@@ -69,6 +114,82 @@ public class AveragedView: UIView {
                                                        bottomObject: bottomObject,
                                                        padding: padding)
         return (views, constraints)
+    }
+    
+    private static func verticalViewConstraints(views: Array<UIView>,
+                                                bottomObject: AnyObject?,
+                                                padding: Float) -> Array<NSLayoutConstraint> {
+        
+        func constraintsOfWidhtHeightBaseLine(firstView: UIView, view: UIView) -> Array<NSLayoutConstraint> {
+            return [
+                NSLayoutConstraint(item: firstView,
+                                   attribute: .width,
+                                   relatedBy: .equal,
+                                   toItem: view,
+                                   attribute: .width,
+                                   multiplier: 1.0,
+                                   constant: 1.0),
+                
+                NSLayoutConstraint(item: firstView,
+                                   attribute: .height,
+                                   relatedBy: .equal,
+                                   toItem: view,
+                                   attribute: .height,
+                                   multiplier: 1.0,
+                                   constant: 1.0),
+                
+                NSLayoutConstraint(item: firstView,
+                                   attribute: .left,
+                                   relatedBy: .equal,
+                                   toItem: view,
+                                   attribute: .left,
+                                   multiplier: 1.0,
+                                   constant: 1.0)]
+        }
+        
+        let constraints = NSMutableArray()
+        var visualFormat = NSMutableString() as String
+        let viewsDictionary = NSMutableDictionary()
+        var firstView = UIView()
+        var firstViewName = ""
+        
+        for view in views {
+            let index = views.index(of: view)
+            let viewName = NSString(format: "view%d", index!) as String
+            if index == 0 {
+                firstView = view
+                firstViewName = viewName
+                if views.count == 1 {
+                    visualFormat.append(NSString(format: "V:|-padding-[%@]-padding-[bottomObject]", viewName) as String)
+                } else {
+                    visualFormat.append(NSString(format: "V:|-padding-[%@]", viewName) as String)
+                }
+            } else if index == (views.count - 1) {
+                visualFormat.append(NSString(format: "-padding-[%@]-padding-[bottomObject]", viewName) as String)
+                constraints.addObjects(from: constraintsOfWidhtHeightBaseLine(firstView: firstView, view: view))
+            } else {
+                visualFormat.append(NSString(format: "-padding-[%@]", viewName) as String)
+                constraints.addObjects(from: constraintsOfWidhtHeightBaseLine(firstView: firstView, view: view))
+            }
+            
+            viewsDictionary.setObject(view, forKey: viewName)
+        }
+        viewsDictionary.setObject(bottomObject!, forKey: "bottomObject")
+        
+        let viewsDic = viewsDictionary.copy() as! [String : AnyObject]
+        constraints.addObjects(from: NSLayoutConstraint.constraints(withVisualFormat: visualFormat,
+                                                                    options: NSLayoutFormatOptions(rawValue: 0),
+                                                                    metrics: ["padding": padding],
+                                                                    views: viewsDic))
+        
+        let formatString = NSString(format: "H:|-padding-[%@]-padding-|", firstViewName) as String
+        
+        constraints.addObjects(from: NSLayoutConstraint.constraints(withVisualFormat: formatString,
+                                                                    options: NSLayoutFormatOptions(rawValue: 0),
+                                                                    metrics: ["padding": padding],
+                                                                    views: [firstViewName: firstView]))
+        return constraints.copy() as! Array<NSLayoutConstraint>
+        
     }
     
     private static func viewConstraints(views: Array<UIView>, bottomObject: AnyObject?, padding: Float) -> Array<NSLayoutConstraint> {
