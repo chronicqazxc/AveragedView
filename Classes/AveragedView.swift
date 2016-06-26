@@ -33,11 +33,11 @@ public class AveragedView: UIView {
     
     public static func averagedViewConstraints(bottomObject: AnyObject?,
                                                padding: Float,
-                                               autoBackGroundColor: Bool,
+                                               randomBackgroundColor: Bool,
                                                type: AveragedViewType,
                                                viewsForAverage: () -> Array<UIView>) -> Array<NSLayoutConstraint> {
         let views = viewsForAverage()
-        if autoBackGroundColor {
+        if randomBackgroundColor {
             for view in views {
                 view.backgroundColor = UIColor.randomColor()
             }

@@ -79,12 +79,9 @@ class ViewController: UIViewController {
     }
     
     func processViews(button: UIButton) {
-        
-        let numberOfViews = Int((self.button?.title(for: UIControlState(rawValue: 0)))!)!
-        
         let constraints = AveragedView.averagedViewConstraints(bottomObject: self.slider,
                                                                padding: 10.0,
-                                                               autoBackGroundColor: true,
+                                                               randomBackgroundColor: true,
                                                                type: AveragedViewType.Vertical,
                                                                viewsForAverage:
             { [weak self] _ in
@@ -96,6 +93,8 @@ class ViewController: UIViewController {
                 }
                 
                 let views = NSMutableArray()
+                let numberOfViews = Int(button.title(for: UIControlState(rawValue: 0))!)!
+                
                 for _ in 1 ... numberOfViews {
                     let view = UIView(frame: CGRect.zero)
                     view.tag = tag
