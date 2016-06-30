@@ -9,7 +9,7 @@
 import UIKit
 
 public enum AveragedViewType {
-    case Horizon, Vertical
+    case Horizontal, Vertical
 }
 
 public class AveragedView: UIView {
@@ -26,9 +26,9 @@ public class AveragedView: UIView {
     }
     
     func averageViewConstraints(views: Array<UIView>, bottomObject: AnyObject?, padding: Float) -> Array<NSLayoutConstraint> {
-        return AveragedView.viewConstraints(views: views ,
-                                            bottomObject: bottomObject,
-                                            padding: padding)
+        return AveragedView.horizontalViewConstraints(views: views ,
+                                                      bottomObject: bottomObject,
+                                                      padding: padding)
     }
     
     public static func averagedViewConstraints(bottomObject: AnyObject?,
@@ -49,9 +49,9 @@ public class AveragedView: UIView {
                                                                bottomObject: bottomObject,
                                                                padding: padding)
         } else {
-            constraints = AveragedView.viewConstraints(views: views,
-                                                       bottomObject: bottomObject,
-                                                       padding: padding)
+            constraints = AveragedView.horizontalViewConstraints(views: views,
+                                                                 bottomObject: bottomObject,
+                                                                 padding: padding)
         }
         return constraints
     }
@@ -82,9 +82,9 @@ public class AveragedView: UIView {
                                                                    bottomObject: bottomObject,
                                                                    padding: padding)
             } else {
-                constraints = AveragedView.viewConstraints(views: views,
-                                                           bottomObject: bottomObject,
-                                                           padding: padding)
+                constraints = AveragedView.horizontalViewConstraints(views: views,
+                                                                     bottomObject: bottomObject,
+                                                                     padding: padding)
             }
             return constraints
         } else {
@@ -110,9 +110,9 @@ public class AveragedView: UIView {
         
         let views = viewsArray.copy() as! Array<UIView>
         
-        let constraints = AveragedView.viewConstraints(views: views ,
-                                                       bottomObject: bottomObject,
-                                                       padding: padding)
+        let constraints = AveragedView.horizontalViewConstraints(views: views ,
+                                                                 bottomObject: bottomObject,
+                                                                 padding: padding)
         return (views, constraints)
     }
     
@@ -192,7 +192,7 @@ public class AveragedView: UIView {
         
     }
     
-    private static func viewConstraints(views: Array<UIView>, bottomObject: AnyObject?, padding: Float) -> Array<NSLayoutConstraint> {
+    private static func horizontalViewConstraints(views: Array<UIView>, bottomObject: AnyObject?, padding: Float) -> Array<NSLayoutConstraint> {
         
         func constraintsOfWidhtHeightBaseLine(firstView: UIView, view: UIView) -> Array<NSLayoutConstraint> {
             return [

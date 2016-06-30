@@ -11,6 +11,7 @@ import AveragedView
 
 class ViewController: UIViewController {
     
+    var typeSwitch: UISegmentedControl?
     @IBOutlet weak var slider: UISlider!
     var viewsBottomObject: UIView?
     var button: UIButton?
@@ -20,12 +21,24 @@ class ViewController: UIViewController {
         
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor.darkGray()
-        button.addTarget(self, action:#selector(ViewController.processViews(button:)) , for: .touchUpInside)
+        button.addTarget(self, action:#selector(ViewController.processViews(sender:)) , for: .touchUpInside)
         button.setTitle("1", for: UIControlState(rawValue:0))
         button.tintColor = UIColor.white()
         button.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(button)
-        self.view.addConstraints(self.buttonConstraints(button: button, heigt: 50.0, padding: 10.0))
+        
+        self.typeSwitch = UISegmentedControl(items: ["Horizontal",
+                                                     "Vertical",
+                                                     "Auto"])
+        self.typeSwitch?.selectedSegmentIndex = 0
+        self.typeSwitch?.addObserver(self, forKeyPath: "selectedSegmentIndex", options: .new, context: nil)
+        self.typeSwitch?.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.typeSwitch!)
+        
+        self.view.addConstraints(self.buttonAndSwitchConstraints(button: button,
+                                                                 typeSwitch: self.typeSwitch!,
+                                                                 heigt: 50.0,
+                                                                 padding: 10.0))
         self.button = button
         
         self.slider.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +53,19 @@ class ViewController: UIViewController {
         let title = NSString(format: "%d", lroundf(sender.value))
         if title != self.button?.title(for: UIControlState(rawValue: 0)) {
             self.button?.setTitle(title as String, for: UIControlState(rawValue:0))
+            self.processViews(sender: self.button!)
         }
+        
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
+        if keyPath == "selectedSegmentIndex" {
+            self.processViews(sender: self.button!)
+        }
+    }
+    
+    deinit {
+        self.slider.removeObserver(self, forKeyPath: "selectedSegmentIndex", context: nil)
     }
     
     func sliderConstraints(slider: UISlider, button: UIButton, padding: Float) -> Array<NSLayoutConstraint> {
@@ -59,17 +84,43 @@ class ViewController: UIViewController {
         return constraints.copy() as! Array<NSLayoutConstraint>
     }
     
-    func buttonConstraints(button: UIButton, heigt: Float ,padding: Float) -> Array<NSLayoutConstraint> {
+    func buttonAndSwitchConstraints(button: UIButton, typeSwitch: UISegmentedControl, heigt: Float ,padding: Float) -> Array<NSLayoutConstraint> {
         
-        let constraints = NSMutableArray(array: NSLayoutConstraint.constraints(withVisualFormat: "H:|-padding-[button]-padding-|",
+        let constraints = NSMutableArray(array: NSLayoutConstraint.constraints(withVisualFormat: "H:|-padding-[button]-padding-[typeSwitch]-padding-|",
                                                                                options: NSLayoutFormatOptions(rawValue: 0),
                                                                                metrics: ["padding":padding],
-                                                                               views: ["button":button]))
+                                                                               views: ["button":button,
+                                                                                       "typeSwitch":typeSwitch]))
         
         constraints.addObjects(from: NSLayoutConstraint.constraints(withVisualFormat: "V:[button(==heigt)]-padding-|",
                                                                     options: NSLayoutFormatOptions(rawValue: 0),
                                                                     metrics: ["padding":padding, "heigt":heigt],
                                                                     views: ["button":button]))
+        
+        constraints.add(NSLayoutConstraint(item: typeSwitch,
+                                           attribute: .height,
+                                           relatedBy: .equal,
+                                           toItem: button,
+                                           attribute: .height,
+                                           multiplier: 1.0,
+                                           constant: 1.0))
+        
+        constraints.add(NSLayoutConstraint(item: typeSwitch,
+                                           attribute: .width,
+                                           relatedBy: .equal,
+                                           toItem: button,
+                                           attribute: .width,
+                                           multiplier: 4/5,
+                                           constant: 1.0))
+        
+        constraints.add(NSLayoutConstraint(item: typeSwitch,
+                                           attribute: .top,
+                                           relatedBy: .equal,
+                                           toItem: button,
+                                           attribute: .top,
+                                           multiplier: 1.0,
+                                           constant: 1.0))
+        
         return constraints.copy() as! Array<NSLayoutConstraint>
     }
     
@@ -78,11 +129,22 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func processViews(button: UIButton) {
+    func processViews(sender: UIControl) {
+        var type: AveragedViewType?
+        
+        if self.typeSwitch?.selectedSegmentIndex == 0 {
+            type = .Horizontal
+        } else if self.typeSwitch?.selectedSegmentIndex == 1 {
+            type = .Vertical
+        } else {
+            print("Haven't implement yet")
+            return
+        }
+        
         let constraints = AveragedView.averagedViewConstraints(bottomObject: self.slider,
                                                                padding: 10.0,
                                                                randomBackgroundColor: true,
-                                                               type: AveragedViewType.Vertical,
+                                                               type: type!,
                                                                viewsForAverage:
             { [weak self] _ in
                 let tag = 999
@@ -93,7 +155,15 @@ class ViewController: UIViewController {
                 }
                 
                 let views = NSMutableArray()
-                let numberOfViews = Int(button.title(for: UIControlState(rawValue: 0))!)!
+                
+                var button: UIButton?
+                if sender.classForCoder == UIButton.self {
+                    button = sender as? UIButton
+                } else {
+                    button = self?.button
+                }
+                
+                let numberOfViews = Int((button?.title(for: UIControlState(rawValue: 0))!)!)!
                 
                 for _ in 1 ... numberOfViews {
                     let view = UIView(frame: CGRect.zero)
